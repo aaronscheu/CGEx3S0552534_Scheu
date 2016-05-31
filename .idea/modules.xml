@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/CGEx3S0552534_Scheu.iml" filepath="$PROJECT_DIR$/CGEx3S0552534_Scheu.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../CGSS15Ex3MobileDS/CGSS15Ex3MobileDS.iml" filepath="$PROJECT_DIR$/../CGSS15Ex3MobileDS/CGSS15Ex3MobileDS.iml" />
+    </modules>
+  </component>
+</project>
