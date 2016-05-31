@@ -8,8 +8,15 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class Fork {
     private boolean sphere = false;
-    private int size = 50;
-    private float pitch, yaw, height, width;
+    private int size = 150;
+    private float
+            pitch,
+            yaw,
+            height,
+            width;
+    private Fork
+            leftChild,
+            rightChild;
 
 
     public Fork(float pitch, float yaw, float height, float width, Fork leftChild, Fork rightChild) {
@@ -17,6 +24,8 @@ public class Fork {
         this.yaw    = yaw;
         this.height = height;
         this.width  = width;
+        this.leftChild = leftChild;
+        this.rightChild = rightChild;
     }
     public Fork() {
         sphere = true;
@@ -33,6 +42,9 @@ public class Fork {
             glVertex2f(width, height);
             glEnd();
         }
+
+        if (leftChild  != null) leftChild.render();
+        if (rightChild != null) rightChild.render();
 
         glPopMatrix();
     }

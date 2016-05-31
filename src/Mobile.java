@@ -40,7 +40,7 @@ public class Mobile {
 
     FloatBuffer noAmbient     = GLDrawHelper.directFloatBuffer(new float[] {0.2f, 0.2f, 0.2f, 1.0f});
     FloatBuffer whiteDiffuse  = GLDrawHelper.directFloatBuffer(new float[] {1.0f, 1.0f, 1.0f, 1.0f});
-    FloatBuffer positionLight = GLDrawHelper.directFloatBuffer(new float[] {0.0f, 0.0f, 0.0f, 1.0f});
+    FloatBuffer positionLight = GLDrawHelper.directFloatBuffer(new float[] {150f, 150f, 150f, 1.0f});
 
 
     public Mobile() {
@@ -156,9 +156,9 @@ public class Mobile {
         return (Sys.getTime() * 1000 / Sys.getTimerResolution());
     }
 
-    public void draw() {
+    private void draw() {
         // clear screen
-        glClearColor(0, 0, 0, 0);
+        glClearColor(0.3f, 0.3f, 0.3f, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
@@ -177,8 +177,7 @@ public class Mobile {
 
 
     public static void main(String[] args) {
-        Mobile mobile = new Mobile();
-        mobile.run();
+        new Mobile().run();
     }
 
 
