@@ -22,9 +22,9 @@ public class Mobile {
             width = 1200,
             height = 800,
             fps = 0,
-            cameraDist = 3500,
-            cameraX = width /2,
-            cameraY = height/2,
+            cameraDist = 2000,
+            cameraX = 0,
+            cameraY = -height/3*2,
             fillMode = GL_LINE,
             ticksPerSecond = 60;
 
@@ -36,7 +36,6 @@ public class Mobile {
             lastKeySpace;
 
     private Fork fork;
-    private float len, wid;
 
     FloatBuffer noAmbient     = GLDrawHelper.directFloatBuffer(new float[] {0.2f, 0.2f, 0.2f, 1.0f});
     FloatBuffer whiteDiffuse  = GLDrawHelper.directFloatBuffer(new float[] {1.0f, 1.0f, 1.0f, 1.0f});
@@ -45,12 +44,12 @@ public class Mobile {
 
     public Mobile() {
         // Main fork
-        fork = new Fork(40,70,len,wid,
+        fork = new Fork(40, 70, 100, 300,
                 // Child forks
-                new Fork(40,70,len,wid, new Fork(), new Fork()),
-                new Fork(40,70,len,wid,
-                    new Fork(40,70,len*0.75f,wid*0.75f, new Fork(), new Fork()),
-                    new Fork(40,70,len*0.75f,wid*0.75f, new Fork(), new Fork())));
+                new Fork(40, 70, 150, 200, new Fork(), new Fork()),
+                new Fork(40, 70, 250, 250,
+                    new Fork(40, 70, 220, 180, new Fork(), new Fork()),
+                    new Fork(40, 70, 160, 180, new Fork(), new Fork())));
     }
 
     private void run() {
@@ -78,6 +77,7 @@ public class Mobile {
         gluPerspective(45.f, width / (float) height, 10f, 20000.f);
         glMatrixMode(GL_MODELVIEW);
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_LINE_SMOOTH);
 
         // set up lightning
 
@@ -112,24 +112,24 @@ public class Mobile {
 
         // camera zoom
         if(Keyboard.isKeyDown(Keyboard.KEY_O)) {
-            cameraDist += 50;
+            cameraDist += 20;
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_I)) {
-            cameraDist -= 50;
+            cameraDist -= 20;
         }
 
         // camera pan and tilt
         if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-            cameraX += 50;
+            cameraX += 20;
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-            cameraX -= 50;
+            cameraX -= 20;
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-            cameraY += 50;
+            cameraY += 20;
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-            cameraY -= 50;
+            cameraY -= 20;
         }
 
     }
@@ -164,7 +164,7 @@ public class Mobile {
         glLoadIdentity();
 
         // set camera
-        gluLookAt(cameraX,cameraY,cameraDist, 0,0,0, 0,1,0);
+        gluLookAt(0,0,cameraDist, cameraX,cameraY,0, 0,1,0);
 
         // position light
         glLight(GL_LIGHT0, GL_POSITION, positionLight);
