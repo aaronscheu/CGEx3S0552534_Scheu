@@ -10,7 +10,9 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class Fork {
     private boolean sphere = false;
-    private int size = 50;
+    private int
+            size = 50,
+            texID = 0;
     private float
             pitch,
             pitchPos = 0,
@@ -40,9 +42,20 @@ public class Fork {
         sphere = true;
     }
 
+    public void setTexID() {
+        texID = Mobile.textureIDs.get(new Random().nextInt(Mobile.textureIDs.size()));
+        if (leftChild != null)
+            leftChild.setTexID();
+        if (rightChild != null)
+            rightChild.setTexID();
+    }
+
     public void render() {
         glPushMatrix();
         glColor3f(color[0], color[1], color[2]);
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, texID);
+        
         pitchDir = pitchPos > maxPitchAngle ? -1 : pitchPos < -maxPitchAngle ? 1 : pitchDir;
         pitchPos += pitch * pitchDir * speed * 0.5;
         yawPos += yaw * speed;
