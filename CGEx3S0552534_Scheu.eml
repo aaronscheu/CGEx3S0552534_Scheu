@@ -3,4 +3,7 @@
 	<output-test url="file://$MODULE_DIR$/out/test/CGEx3S0552534_Scheu"/>
 	<exclude-output/>
 	<contentEntry url="file://$MODULE_DIR$"/>
+	<levels>
+		<level name="lwjgl" value="project"/>
+	</levels>
 </component>

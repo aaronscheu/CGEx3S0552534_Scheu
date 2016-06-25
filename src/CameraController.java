@@ -4,6 +4,7 @@
  */
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 public class CameraController {
@@ -69,8 +70,11 @@ public class CameraController {
         {
                 //roatate the pitch around the X axis
                 GL11.glRotatef(pitch, 1.0f, 0.0f, 0.0f);
+                // Matrix4f.rotate(pitch, new Vector3f(1.0f, 0.0f, 0.0f), );
+
                 //roatate the yaw around the Y axis
                 GL11.glRotatef(yaw, 0.0f, 1.0f, 0.0f);
+
                 //translate to the position vector's location
                 GL11.glTranslatef(CameraPosition.x, CameraPosition.y, CameraPosition.z);
         }
