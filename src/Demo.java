@@ -1,6 +1,7 @@
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
+import edu.berlin.htw.ds.cg.helper.GLDrawHelper;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.ContextAttribs;
@@ -16,27 +17,30 @@ public class Demo {
 
     // Setup variables
     private final String WINDOW_TITLE = "The Quad: glDrawElements";
-    private final int WIDTH = 320;
-    private final int HEIGHT = 240;
+    private final int WIDTH = 620;
+    private final int HEIGHT = 540;
     // Quad variables
     private int vaoId = 0;
     private int vboId = 0;
     private int vboiId = 0;
     private int indicesCount = 0;
 
+    private int
+            vsId,
+            fsId,
+            pId;
+
     public Demo() {
         // Initialize OpenGL (Display)
         this.setupOpenGL();
-
         this.setupQuad();
+        this.setupShaders();
 
         while (!Display.isCloseRequested()) {
             // Do a single loop (logic/render)
             this.loopCycle();
 
-            // Force a maximum FPS of about 60
             Display.sync(60);
-            // Let the CPU synchronize with the GPU if GPU is tagging behind
             Display.update();
         }
 
@@ -44,7 +48,7 @@ public class Demo {
         this.destroyOpenGL();
     }
 
-    public void setupOpenGL() {
+    private void setupOpenGL() {
         // Setup an OpenGL context with API version 3.2
         try {
             PixelFormat pixelFormat = new PixelFormat();
@@ -55,6 +59,7 @@ public class Demo {
             Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
             Display.setTitle(WINDOW_TITLE);
             Display.create(pixelFormat, contextAtrributes);
+            // Display.create();
 
             GL11.glViewport(0, 0, WIDTH, HEIGHT);
         } catch (LWJGLException e) {
@@ -62,6 +67,7 @@ public class Demo {
             System.exit(-1);
         }
 
+        System.out.println("OpenGL version: " + GL11.glGetString(GL11.GL_VERSION));
         // Setup an XNA like background color
         GL11.glClearColor(0.4f, 0.6f, 0.9f, 0f);
 
@@ -69,8 +75,37 @@ public class Demo {
         GL11.glViewport(0, 0, WIDTH, HEIGHT);
     }
 
-    public void setupQuad() {
-        // Vertices, the order is not important.
+    private void setupShaders() {
+        // Load the vertex shader
+        vsId = GLDrawHelper.compileShader("shader/vert_shader.glsl", GL20.GL_VERTEX_SHADER);
+        // Load the fragment shader
+        fsId = GLDrawHelper.compileShader("shader/frac_shader.glsl", GL20.GL_FRAGMENT_SHADER);
+
+        // Create a new shader program that links both shaders
+        pId = GL20.glCreateProgram();
+        GL20.glAttachShader(pId, vsId);
+        GL20.glAttachShader(pId, fsId);
+
+        // Bind shader data to vbo attribute list
+        GL20.glBindAttribLocation(pId, 0, "in_Position");
+        // GL20.glBindAttribLocation(pId, 2, "tex0_in");
+        // GL20.glBindAttribLocation(pId, 3, "norm_in");
+
+        // Test Shader
+        // GL20.glBindAttribLocation(pId, 0, "in_Position");
+        // GL20.glBindAttribLocation(pId, 1, "in_Color");
+        // GL20.glBindAttribLocation(pId, 2, "in_TextureCoord");
+
+        // Get matrices uniform locations
+        // projectionMatrixLocation = GL20.glGetUniformLocation(pId,"ModelViewProjectionMatrix");
+        // viewMatrixLocation = GL20.glGetUniformLocation(pId, "ModelViewMatrix");
+        // modelMatrixLocation = GL20.glGetUniformLocation(pId, "ModelMatrix");
+
+        GL20.glLinkProgram(pId);
+        GL20.glValidateProgram(pId);
+    }
+
+    private void setupQuad() {
         float[] vertices = {
                 -0.5f, 0.5f, 0f,    // Left top         ID: 0
                 -0.5f, -0.5f, 0f,   // Left bottom      ID: 1
@@ -120,8 +155,9 @@ public class Demo {
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
-    public void loopCycle() {
+    private void loopCycle() {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+        GL20.glUseProgram(pId);
 
         // Bind to the VAO that has all the information about the vertices
         GL30.glBindVertexArray(vaoId);
@@ -137,9 +173,11 @@ public class Demo {
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
         GL20.glDisableVertexAttribArray(0);
         GL30.glBindVertexArray(0);
+
+        GL20.glUseProgram(0);
     }
 
-    public void destroyOpenGL() {
+    private void destroyOpenGL() {
         // Disable the VBO index from the VAO attributes list
         GL20.glDisableVertexAttribArray(0);
 
